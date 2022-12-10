@@ -60,9 +60,12 @@ const WebsiteBuilder = () => {
             <h1>What type of website are you building?</h1>
             <p>Start typing and get the suggestions to choose from.</p>
             <div className='w-96'>
-                <div className='flex flex-row pl-5 border rounded-full focus-within:border-hostinger-purple hover:border-gray-800 transition-colors duration-300'>
-                    <input className='bg-hostinger-white-background outline-0 grow' type="text" value={textInput} onChange={event => updateValue(event?.target?.value)}/>
-                    <button className='rounded-full bg-hostinger-purple hover:bg-[#583bb6] text-white my-0.5 mx-0.5 w-10 h-10' onClick={getSuggestionsOnButtonClick}>
+                <div className='flex flex-row pl-5 border bg-hostinger-background-grey rounded-full focus-within:border-hostinger-purple hover:border-gray-800 transition-colors duration-300'>
+                    <input className='bg-inherit outline-0 grow' type="text" value={textInput} onChange={event => updateValue(event?.target?.value)}/>
+                    <button 
+                        className='rounded-full outline-none bg-hostinger-purple hover:bg-hostinger-purple-deep text-white my-0.5 mx-0.5 w-10 h-10 focus:border-2 focus:border-hostinger-purple-opaque'
+                        onClick={getSuggestionsOnButtonClick}
+                    >
                         <img src={magnifyingGlass} alt='search' height={15} width={15} className='mx-auto'/>
                     </button>
                 </div>
