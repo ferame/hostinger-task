@@ -34,7 +34,7 @@ const suggestionsApiService = async (input: string, limit: number): Promise<stri
 
 // TODO: this component can be made into reusable autocomplete component and into separate WebsiteBuilder component
 const WebsiteBuilder = () => {
-    const [textInput, setTextInput] = useState<string>(''); //TODO: might be able to useRef instead, re-https://youtu.be/GGo3MVBFr1A?t=110
+    const [textInput, setTextInput] = useState<string>('');
     const [suggestions, setSuggestions] = useState<Set<string>>(new Set());
 
     const getSuggestions = useCallback(async (input: string) => {
@@ -53,7 +53,6 @@ const WebsiteBuilder = () => {
         if (textInput.length > 0)
             debouncedGetSuggestions(textInput);
     };
-    // TODO: in outer div, add styling so that it does make SuggestionsList and the purple pill same width
 
     return (
         <div className='pt-10 flex flex-col items-center'>
