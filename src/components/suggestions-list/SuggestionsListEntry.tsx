@@ -1,6 +1,6 @@
 interface ISuggestionsListEntry {
   text: string;
-  onClick: Function;
+  onClick: (text: string) => void;
 }
 
 export const SuggestionsListEntry: React.FC<ISuggestionsListEntry> = ({ text, onClick }) => {

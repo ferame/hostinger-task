@@ -5,8 +5,8 @@ interface ISuggestionsList {
   onSuggestionChosen: (suggestion: string) => void;
 }
 
-const currentSelectionMock: string = 'Shop';
-const currentSelectionMockKey: string = 'potato-current-selection';
+const currentSelectionMock = 'Shop';
+const currentSelectionMockKey = 'potato-current-selection';
 
 export const SuggestionsList: React.FC<ISuggestionsList> = ({ suggestions, onSuggestionChosen }) => {
   const listItems = [...suggestions].map((suggestion) => (
