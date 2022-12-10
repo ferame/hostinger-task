@@ -1,9 +1,10 @@
-import { Fragment, useEffect, useState, useCallback } from 'react';
-import debounce from '../../utils/debounce';
-import SuggestionsList from '../../components/suggestions-list/SuggestionsList';
+import { useState, useCallback } from 'react';
+import { debounce } from '../../utils/debounce';
+import { SuggestionsList } from '../../components/suggestions-list/SuggestionsList';
 import magnifyingGlass from '../../assets/magnifying-glass.svg';
 
 const SUGGESTIONS_LIMIT = 10;
+const DEBOUNCE_TIME_MS = 1000;
 
 const suggestionsApiService = async (input: string, limit: number): Promise<string[]> => {
     const requestOptions: RequestInit = {
@@ -14,8 +15,8 @@ const suggestionsApiService = async (input: string, limit: number): Promise<stri
             "Content-Type": "application/json",
         },
         body: JSON.stringify({ 
-            input: input,
-            limit: limit
+            input,
+            limit,
         })
     };
 
@@ -27,22 +28,22 @@ const suggestionsApiService = async (input: string, limit: number): Promise<stri
         const suggestions = await response.json();
         return suggestions;
     } catch (error) {
-        console.log(`Error: ${error}`);
+        console.error(`Error: ${error}`);
         return [];
     }
 };
 
 // TODO: this component can be made into reusable autocomplete component and into separate WebsiteBuilder component
-const WebsiteBuilder = () => {
-    const [textInput, setTextInput] = useState<string>('');
-    const [suggestions, setSuggestions] = useState<Set<string>>(new Set());
+export const WebsiteBuilder = () => {
+    const [textInput, setTextInput] = useState('');
+    const [suggestions, setSuggestions] = useState(new Set<string>());
 
     const getSuggestions = useCallback(async (input: string) => {
         const retrievedSuggestions = await suggestionsApiService(input, SUGGESTIONS_LIMIT); 
         setSuggestions(new Set(retrievedSuggestions));
     }, []);
 
-    const debouncedGetSuggestions = useCallback(debounce((input: string) => getSuggestions(input), 1000), []);
+    const debouncedGetSuggestions = useCallback(debounce((input: string) => getSuggestions(input), DEBOUNCE_TIME_MS), []);
 
     const updateValue = (newInput: string) => {
 		setTextInput(newInput);
@@ -73,5 +74,3 @@ const WebsiteBuilder = () => {
         </div>
     );
 };
-
-export default WebsiteBuilder;

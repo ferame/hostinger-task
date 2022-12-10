@@ -1,4 +1,4 @@
-import WebsiteBuilder from "./pages/website-builder/WebsiteBuilder";
+import { WebsiteBuilder } from "./pages/website-builder/WebsiteBuilder";
 
 const App = () => {
   return (

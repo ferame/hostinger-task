@@ -1,4 +1,4 @@
-import SuggestionsListEntry from "./SuggestionsListEntry"
+import { SuggestionsListEntry } from "./SuggestionsListEntry"
 
 interface ISuggestionsList {
     suggestions: Set<string>,
@@ -8,7 +8,7 @@ interface ISuggestionsList {
 const currentSelectionMock:string = "Shop";
 const currentSelectionMockKey:string = "potato-current-selection";
 
-const SuggestionsList: React.FC<ISuggestionsList> = ({ suggestions, onSuggestionChosen }) => {
+export const SuggestionsList: React.FC<ISuggestionsList> = ({ suggestions, onSuggestionChosen }) => {
     const listItems = [...suggestions].map(suggestion =>
         <SuggestionsListEntry key={suggestion} text={suggestion} onClick={onSuggestionChosen}/>
     );
@@ -22,10 +22,8 @@ const SuggestionsList: React.FC<ISuggestionsList> = ({ suggestions, onSuggestion
                         onClick={() => console.log("Current selection clicked")}
                     /> : null
             }
-            {listItems.length > 0 ? <p className="text-3xs font-medium py-2 px-4 text-slate-800 tracking-2widest">SUGGESTIONS</p> : null}
+            {listItems.length > 0 ? <p className="text-3xs font-medium py-2 px-4 text-slate-800 tracking-2widest uppercase">Suggestions</p> : null}
             {listItems}
         </ul>
     )
 };
-
-export default SuggestionsList;
