@@ -5,7 +5,12 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'hostinger-purple': '#583AB5',
+        'hostinger-hover-grey': '#EBEFF2',
+      }
+    },
   },
   plugins: [],
 }
