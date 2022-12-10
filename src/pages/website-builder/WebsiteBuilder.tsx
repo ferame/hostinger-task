@@ -56,14 +56,14 @@ const WebsiteBuilder = () => {
     // TODO: in outer div, add styling so that it does make SuggestionsList and the purple pill same width
 
     return (
-        <div>
-            <h1>What type of website are you building?</h1>
-            <p>Start typing and get the suggestions to choose from.</p>
+        <div className='pt-10 flex flex-col items-center'>
+            <h1 className='pb-3 text-3.5xl'>What type of website are you building?</h1>
+            <p className='pb-10 text-base text-hostinger-text-grey font-light'>Start typing and get the suggestions to choose from.</p>
             <div className='w-96'>
-                <div className='flex flex-row pl-5 border bg-hostinger-background-grey rounded-full focus-within:border-hostinger-purple hover:border-gray-800 transition-colors duration-300'>
-                    <input className='bg-inherit outline-0 grow' type="text" value={textInput} onChange={event => updateValue(event?.target?.value)}/>
+                <div className='flex flex-row items-center pl-5 border bg-hostinger-background-grey rounded-full focus-within:border-hostinger-purple hover:border-gray-800 transition-colors duration-300 mb-2'>
+                    <input className='bg-inherit border-0 outline-0 grow text-base my-4' type="text" value={textInput} onChange={event => updateValue(event?.target?.value)}/>
                     <button 
-                        className='rounded-full outline-none bg-hostinger-purple hover:bg-hostinger-purple-deep text-white my-0.5 mx-0.5 w-10 h-10 focus:border-2 focus:border-hostinger-purple-opaque'
+                        className='rounded-full outline-none bg-hostinger-purple hover:bg-hostinger-purple-deep text-white my-0.5 ml-0.5 mr-1 w-12 h-12 focus:border-2 focus:border-hostinger-purple-opaque'
                         onClick={getSuggestionsOnButtonClick}
                     >
                         <img src={magnifyingGlass} alt='search' height={15} width={15} className='mx-auto'/>
