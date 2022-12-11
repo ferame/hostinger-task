@@ -90,7 +90,7 @@ export const AutocompleteSearch: React.FC<IAutocompleteSearch> = ({ suggestionsL
         </button>
       </div>
       {suggestions && suggestions?.size > 0 ? (
-        <SuggestionsList suggestions={suggestions} onSuggestionChosen={updateValue} />
+        <SuggestionsList currentInput={textInput} suggestions={suggestions} onSuggestionChosen={updateValue} />
       ) : null}
     </div>
   );
