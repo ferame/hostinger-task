@@ -7,6 +7,8 @@ export default defineConfig({
   base: '/hostinger-task/',
   plugins: [react()],
   test: {
+    globals: true,
     environment: 'jsdom',
+    setupFiles: './vitest.setup.ts',
   },
 });
