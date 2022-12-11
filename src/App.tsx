@@ -1,11 +1,11 @@
-import WebsiteBuilder from "./pages/website-builder/WebsiteBuilder";
+import { WebsiteBuilder } from './pages/website-builder/WebsiteBuilder';
 
 const App = () => {
   return (
     <div className="flex flex-col h-screen bg-hostinger-white-background">
-        <WebsiteBuilder/>
+      <WebsiteBuilder />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
