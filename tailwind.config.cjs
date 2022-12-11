@@ -1,21 +1,34 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      animation: {
+        'reverse-spin': 'reverse-spin 1s linear infinite',
+      },
+      keyframes: {
+        'reverse-spin': {
+          from: {
+            transform: 'rotate(360deg)',
+          },
+        },
+      },
+      borderWidth: {
+        6: '6px',
+      },
       letterSpacing: {
-        '2widest': '.2em'
+        '2widest': '.2em',
       },
       fontSize: {
         '3xs': '0.625rem',
         '2xs': '0.75rem',
-        '3.5xl': ['2rem', {
-          lineHeight: '2.375rem',
-          fontWeight: '500',
-        }]
+        '3.5xl': [
+          '2rem',
+          {
+            lineHeight: '2.375rem',
+            fontWeight: '500',
+          },
+        ],
       },
       colors: {
         'hostinger-purple': '#583bb6',
@@ -23,9 +36,9 @@ module.exports = {
         'hostinger-purple-opaque': '#9B89D3',
         'hostinger-background-grey': '#F5F8FB',
         'hostinger-hover-grey': '#EBEFF2',
-        'hostinger-text-grey': '#474b4f'
-      }
+        'hostinger-text-grey': '#474b4f',
+      },
     },
   },
   plugins: [],
-}
+};
