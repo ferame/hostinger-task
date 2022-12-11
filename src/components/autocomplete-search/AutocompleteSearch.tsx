@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, Fragment } from 'react';
 import { debounce } from '../../utils/debounce';
 import { SuggestionsList } from '../../components/suggestions-list/SuggestionsList';
 import magnifyingGlass from '../../assets/magnifying-glass.svg';
@@ -65,15 +65,20 @@ export const AutocompleteSearch: React.FC<IAutocompleteSearch> = ({ suggestionsL
   };
 
   return (
-    <div className="w-96">
-      <div className="flex flex-row items-center pl-5 border bg-hostinger-background-grey rounded-full focus-within:border-hostinger-purple hover:border-gray-800 transition-colors duration-300 mb-2">
+    <Fragment>
+      <div
+        data-testid="autocomplete-pill"
+        className="flex flex-row items-center pl-5 border bg-hostinger-background-grey rounded-full focus-within:border-hostinger-purple hover:border-gray-800 transition-colors duration-300 mb-2"
+      >
         <input
+          data-testid="autocomplete-input-field"
           className="bg-inherit border-0 outline-0 grow text-base my-4"
           type="text"
           value={textInput}
           onChange={(event) => updateValue(event?.target?.value)}
         />
         <button
+          data-testid="autocomplete-search-button"
           className={`rounded-full outline-none w-12 h-12 bg-hostinger-purple text-white my-0.5 ml-0.5 mr-1 hover:bg-hostinger-purple-deep ${
             isLoading ? LOADING_BUTTON_STYLING : SEARCH_BUTTON_STYLING
           }`}
@@ -94,6 +99,6 @@ export const AutocompleteSearch: React.FC<IAutocompleteSearch> = ({ suggestionsL
       {suggestions && suggestions?.size > 0 ? (
         <SuggestionsList suggestions={suggestions} onSuggestionChosen={updateValue} />
       ) : null}
-    </div>
+    </Fragment>
   );
 };
