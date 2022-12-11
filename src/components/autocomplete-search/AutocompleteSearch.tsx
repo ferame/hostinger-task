@@ -13,7 +13,6 @@ const LOADING_BUTTON_STYLING =
 const SEARCH_BUTTON_STYLING = 'focus:border-2 focus:border-hostinger-purple-opaque';
 
 const suggestionsApiService = async (input: string, limit: number): Promise<string[]> => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
   const requestOptions: RequestInit = {
     method: 'POST',
     mode: 'cors',
@@ -80,13 +79,16 @@ export const AutocompleteSearch: React.FC<IAutocompleteSearch> = ({ suggestionsL
           }`}
           onClick={() => debouncedGetSuggestions(textInput)}
         >
-          <img
-            src={magnifyingGlass}
-            alt="search"
-            height={15}
-            width={15}
-            className={`mx-auto ${isLoading ? 'animate-reverse-spin' : ''}`}
-          />
+          {isLoading ? null : ( //Issue with placement of svg when spinning.
+            <img
+              src={magnifyingGlass}
+              alt="search"
+              height={15}
+              width={15}
+              className={'mx-auto'}
+              //className={`mx-auto ${isLoading ? 'animate-reverse-spin' : ''}`}
+            />
+          )}
         </button>
       </div>
       {suggestions && suggestions?.size > 0 ? (
