@@ -50,8 +50,12 @@ export const AutocompleteSearch: React.FC<IAutocompleteSearch> = ({ suggestionsL
 
   const getSuggestions = useCallback(async (input: string) => {
     setIsLoading(true);
-    const retrievedSuggestions = await suggestionsApiService(input, suggestionsLimit);
-    setSuggestions(new Set(retrievedSuggestions));
+    if (input.length > 0) {
+      const retrievedSuggestions = await suggestionsApiService(input, suggestionsLimit);
+      setSuggestions(new Set(retrievedSuggestions));
+    } else {
+      setSuggestions(new Set<string>());
+    }
     setIsLoading(false);
   }, []);
 
