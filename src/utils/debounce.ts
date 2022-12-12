@@ -1,5 +1,5 @@
 export const debounce = (func: (args: any) => void, time: number): ((args: any) => void) => {
-  let timer: number | undefined;
+  let timer: ReturnType<typeof setTimeout>;
 
   return (args: any): void => {
     if (typeof timer === 'number') {
