@@ -1,13 +1,17 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { AutocompleteSearch } from './AutocompleteSearch';
 import { sleep } from '../../utils/sleep';
-
-// TODO: test different API call cases (if api gives 500 or if response is not a valid json)
+import userEvent from '@testing-library/user-event';
+import { waitFor } from '@testing-library/dom';
+import { suggestionsApiClient } from '../../api/suggestionsApiClient';
+import { act } from 'react-dom/test-utils';
 
 describe('AutocompleteSearch tests', () => {
+  let suggestionsPostRequestSpy = vi.spyOn(suggestionsApiClient, 'suggestionsPostRequest');
+
   const mockServerResponse = [
     'Shoemaker',
     'Show Band',
@@ -21,16 +25,9 @@ describe('AutocompleteSearch tests', () => {
     'Online Beachwear Shop',
   ];
 
-  const server = setupServer(
-    rest.post('https://ai-qa-wizard-text-similarity-dev-yls6dto53q-uc.a.run.app/inference', async (req, res, ctx) => {
-      await sleep(1000);
-      return res(ctx.json(mockServerResponse));
-    }),
-  );
-
-  beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
 
   const setupTest = (suggestionsLimit: number, autocompleteDelayTimeMs: number) =>
     render(
@@ -58,7 +55,6 @@ describe('AutocompleteSearch tests', () => {
       expect(getByRole('img')).toHaveProperty('alt', 'search');
     });
 
-    // Vitest works weirdly, and somehow this will resolve to success even if I change it to toBeDefined()
     it('should not have the suggestions list', () => {
       const { queryByTestId } = setupTest(10, 1000);
       expect(queryByTestId('suggestions-list')).toBeNull();
@@ -66,40 +62,55 @@ describe('AutocompleteSearch tests', () => {
   });
 
   describe('Autocomplete with text input', () => {
+    beforeEach(() => {
+      suggestionsPostRequestSpy.mockReturnValue(Promise.resolve(mockServerResponse));
+    });
+
+    afterEach(() => {
+      suggestionsPostRequestSpy.mockRestore();
+    });
+
     it('should show suggestion list after typing', async () => {
+      const user = userEvent.setup();
       const { getByText, getByRole, queryByTestId } = setupTest(10, 1000);
 
       const inputBox = getByRole('textbox');
       expect(inputBox).toHaveValue('');
-      fireEvent.change(inputBox, { target: { value: 'Shop' } });
+      expect(suggestionsPostRequestSpy).toBeCalledTimes(0);
+      await user.type(inputBox, 'Shop');
       expect(inputBox).toHaveValue('Shop');
 
       expect(queryByTestId('suggestions-list')).toBeNull();
-      await sleep(2500);
-      expect(queryByTestId('suggestions-list')).toBeInTheDocument();
+
+      await waitFor(() => expect(queryByTestId('suggestions-list')).toBeInTheDocument());
+      expect(suggestionsPostRequestSpy).toHaveBeenCalledOnce();
+      expect(suggestionsPostRequestSpy).toBeCalledWith('Shop', 10);
 
       mockServerResponse.forEach((response) => {
         expect(getByText(response)).toBeInTheDocument();
       });
     });
 
-    it('should show the change of input in suggestions list', async () => {});
+    it.todo('should show the change of input in suggestions list', async () => {});
 
     it('should handle the suggestion selection successfully', async () => {
+      const user = userEvent.setup();
       const { getByText, getByRole, queryByTestId, findByTestId } = setupTest(10, 1000);
 
       const inputBox = getByRole('textbox');
       expect(inputBox).toHaveValue('');
-      fireEvent.change(inputBox, { target: { value: 'Shop' } });
+      expect(suggestionsPostRequestSpy).toBeCalledTimes(0);
+      await user.type(inputBox, 'Shop');
       expect(inputBox).toHaveValue('Shop');
 
       expect(queryByTestId('suggestions-list')).toBeNull();
-      await sleep(2500);
-      expect(queryByTestId('suggestions-list')).toBeInTheDocument();
+      await waitFor(() => expect(queryByTestId('suggestions-list')).toBeInTheDocument());
+      expect(suggestionsPostRequestSpy).toHaveBeenCalledOnce();
+      expect(suggestionsPostRequestSpy).toBeCalledWith('Shop', 10);
 
       expect(inputBox).toHaveValue('Shop');
       const selectedSuggestion = getByText(mockServerResponse[1]);
-      fireEvent.click(selectedSuggestion);
+      await user.click(selectedSuggestion);
       expect(inputBox).toHaveValue(mockServerResponse[1]);
     });
   });

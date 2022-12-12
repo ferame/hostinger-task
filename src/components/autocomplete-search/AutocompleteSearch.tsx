@@ -2,6 +2,7 @@ import { useState, useCallback, Fragment } from 'react';
 import { debounce } from '../../utils/debounce';
 import { SuggestionsList } from '../../components/suggestions-list/SuggestionsList';
 import magnifyingGlass from '../../assets/magnifying-glass.svg';
+import { suggestionsApiClient } from '../../api/suggestionsApiClient';
 
 interface IAutocompleteSearch {
   suggestionsLimit: number;
@@ -12,36 +13,6 @@ const LOADING_BUTTON_STYLING =
   'border-6 border-t-6 border-hostinger-hover-grey border-t-hostinger-purple-deep animate-spin';
 const SEARCH_BUTTON_STYLING = 'focus:border-2 focus:border-hostinger-purple-opaque';
 
-const suggestionsApiService = async (input: string, limit: number): Promise<string[]> => {
-  const requestOptions: RequestInit = {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      input,
-      limit,
-    }),
-  };
-
-  try {
-    const response = await fetch(
-      `https://ai-qa-wizard-text-similarity-dev-yls6dto53q-uc.a.run.app/inference`,
-      requestOptions,
-    );
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-    const suggestions = await response.json();
-    return suggestions;
-  } catch (error) {
-    console.error(`Error: ${error}`);
-    return [];
-  }
-};
-
 export const AutocompleteSearch: React.FC<IAutocompleteSearch> = ({ suggestionsLimit, autocompleteDelayTimeMs }) => {
   const [textInput, setTextInput] = useState('');
   const [suggestions, setSuggestions] = useState(new Set<string>());
@@ -49,7 +20,7 @@ export const AutocompleteSearch: React.FC<IAutocompleteSearch> = ({ suggestionsL
 
   const getSuggestions = useCallback(async (input: string) => {
     setIsLoading(true);
-    const retrievedSuggestions = await suggestionsApiService(input, suggestionsLimit);
+    const retrievedSuggestions = await suggestionsApiClient.suggestionsPostRequest(input, suggestionsLimit);
     setSuggestions(new Set(retrievedSuggestions));
     setIsLoading(false);
   }, []);
