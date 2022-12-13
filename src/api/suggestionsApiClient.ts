@@ -5,6 +5,10 @@ interface ISuggestionsApiClient {
 // TODO: test different API call cases (if api gives 500 or if response is not a valid json)
 export const suggestionsApiClient: ISuggestionsApiClient = {
   suggestionsPostRequest: async (input: string, limit: number): Promise<string[]> => {
+    if (input.length === 0 || limit <= 0) {
+      return Promise.resolve([]);
+    }
+
     const requestOptions: RequestInit = {
       method: 'POST',
       mode: 'cors',
