@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { fireEvent, render, within } from '@testing-library/react';
+import { fireEvent, queryByRole, render, within } from '@testing-library/react';
 import { SuggestionsList } from './SuggestionsList';
 
 describe('SuggestionsList tests', () => {
@@ -51,11 +51,29 @@ describe('SuggestionsList tests', () => {
     expect(getByText('Suggestions')).toBeInTheDocument();
   });
 
-  it('should render list entries correctly', () => {
+  it('should render list of suggestions correctly', () => {
     const { getByText } = setupTest('mock input', mockSuggestions);
     mockSuggestions.forEach((mockSuggestion) => {
       expect(getByText(mockSuggestion)).toBeInTheDocument();
     });
+  });
+
+  it('should handle the empty suggestions correctly with input', () => {
+    const { getByRole, getAllByRole, queryByText } = setupTest('mock input', new Set<string>());
+
+    expect(getByRole('list')).toBeInTheDocument();
+    expect(queryByText('Suggestions')).toBeNull();
+
+    const allListEntries = getAllByRole('listitem');
+    expect(allListEntries.length).toEqual(1);
+    expect(within(allListEntries[0]).getByText('mock input')).toBeInTheDocument();
+  });
+
+  it('should handle the empty suggestions correctly without input', () => {
+    const { getByRole, queryByText, queryByRole } = setupTest('', new Set<string>());
+    expect(getByRole('list')).toBeInTheDocument();
+    expect(queryByText('Suggestions')).toBeNull();
+    expect(queryByRole('listitem')).toBeNull();
   });
 
   it('should handle the suggestion choice correctly', () => {
@@ -67,6 +85,4 @@ describe('SuggestionsList tests', () => {
     expect(mockOnSuggestionChosen).toHaveBeenCalledOnce;
     expect(mockOnSuggestionChosen).toHaveBeenCalledWith(selectedSuggestion);
   });
-
-  it.todo('should handle the empty suggestions correctly', () => {});
 });
