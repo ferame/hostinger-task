@@ -1,4 +1,4 @@
-import { useState, useCallback, Fragment } from 'react';
+import { useState, useCallback, Fragment, createContext } from 'react';
 import { debounce } from '../../utils/debounce';
 import { SuggestionsList } from '../../components/suggestions-list/SuggestionsList';
 import magnifyingGlass from '../../assets/magnifying-glass.svg';
@@ -17,16 +17,16 @@ export const AutocompleteSearch: React.FC<IAutocompleteSearch> = ({ suggestionsL
   const [textInput, setTextInput] = useState('');
   const [suggestions, setSuggestions] = useState(new Set<string>());
   const [isLoading, setIsLoading] = useState(false);
+  const [isApiClientCalled, setIsApiClientCalled] = useState(false);
 
   const getSuggestions = useCallback(async (input: string) => {
     setIsLoading(true);
-    if (input.length > 0) {
-      const retrievedSuggestions = await suggestionsApiClient.suggestionsPostRequest(input, suggestionsLimit);
-      setSuggestions(new Set(retrievedSuggestions));
-    } else {
-      setSuggestions(new Set<string>());
-    }
+
+    const retrievedSuggestions = await suggestionsApiClient.suggestionsPostRequest(input, suggestionsLimit);
+    if (retrievedSuggestions.length > 0) setSuggestions(new Set(retrievedSuggestions));
+
     setIsLoading(false);
+    setIsApiClientCalled(true);
   }, []);
 
   const debouncedGetSuggestions = useCallback(
@@ -43,12 +43,13 @@ export const AutocompleteSearch: React.FC<IAutocompleteSearch> = ({ suggestionsL
     <Fragment>
       <div
         data-testid="autocomplete-pill"
-        className="flex flex-row items-center pl-5 border bg-hostinger-background-grey rounded-full focus-within:border-hostinger-purple hover:border-gray-800 transition-colors duration-300 mb-2"
+        className="flex flex-row items-center pl-5 border bg-hostinger-background-grey rounded-full focus-within:border-hostinger-purple hover:border-gray-800 transition-colors duration-300 mb-2 w-full max-w-sm"
       >
         <input
           data-testid="autocomplete-input-field"
-          className="bg-inherit border-0 outline-0 grow text-base my-4"
+          className="bg-inherit border-0 outline-0 grow text-base my-4 truncate"
           type="text"
+          placeholder="Type here to search"
           value={textInput}
           onChange={(event) => updateValue(event?.target?.value)}
         />
@@ -60,19 +61,17 @@ export const AutocompleteSearch: React.FC<IAutocompleteSearch> = ({ suggestionsL
           onClick={() => debouncedGetSuggestions(textInput)}
         >
           {isLoading ? null : ( //Issue with placement of svg when spinning.
-            <img
-              src={magnifyingGlass}
-              alt="search"
-              height={15}
-              width={15}
-              className={'mx-auto'}
-              //className={`mx-auto ${isLoading ? 'animate-reverse-spin' : ''}`}
-            />
+            <img src={magnifyingGlass} alt="search" height={15} width={15} className={'mx-auto'} />
           )}
         </button>
       </div>
-      {suggestions && suggestions?.size > 0 ? (
-        <SuggestionsList currentInput={textInput} suggestions={suggestions} onSuggestionChosen={updateValue} />
+      {isApiClientCalled || textInput.length > 0 ? (
+        <SuggestionsList
+          isApiClientCalled={isApiClientCalled}
+          currentInput={textInput}
+          suggestions={suggestions}
+          onSuggestionChosen={updateValue}
+        />
       ) : null}
     </Fragment>
   );
