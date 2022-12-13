@@ -1,10 +1,9 @@
+// TODO: change debounce to have proper types definitions
 export const debounce = (func: (args: any) => void, time: number): ((args: any) => void) => {
-  let timer: number | undefined;
+  let timer: NodeJS.Timer | undefined;
 
   return (args: any): void => {
-    if (typeof timer === 'number') {
-      clearTimeout(timer);
-    }
+    clearTimeout(timer);
     timer = setTimeout(() => func(args), time);
   };
 };
