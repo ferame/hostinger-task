@@ -1,3 +1,5 @@
+import fetch from 'cross-fetch';
+
 interface ISuggestionsApiClient {
   suggestionsPostRequest: (input: string, limit: number) => Promise<string[]>;
 }
@@ -33,7 +35,7 @@ export const suggestionsApiClient: ISuggestionsApiClient = {
       const suggestions = await response.json();
       return suggestions;
     } catch (error) {
-      console.error(`Error: ${error}`);
+      console.error(`${error}`);
       return [];
     }
   },
