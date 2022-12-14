@@ -153,6 +153,16 @@ describe('SuggestionsList tests', () => {
       expect(getByText('No suggestions found')).toBeInTheDocument();
     });
 
+    it('should handle the current input click correctly', async () => {
+      const user = userEvent.setup();
+      const { getByText } = setupTest('current input', mockSuggestions, true);
+      const suggestionListEntry = getByText('current input');
+      expect(mockOnSuggestionChosen).toHaveBeenCalledTimes(0);
+      await user.click(suggestionListEntry);
+      expect(mockOnSuggestionChosen).toHaveBeenCalledOnce();
+      expect(mockOnSuggestionChosen).toHaveBeenCalledWith('current input');
+    });
+
     it('should handle the suggestion choice correctly', async () => {
       const user = userEvent.setup();
       const { getByText } = setupTest('', mockSuggestions, true);

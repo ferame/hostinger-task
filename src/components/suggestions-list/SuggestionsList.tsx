@@ -26,11 +26,9 @@ export const SuggestionsList: React.FC<ISuggestionsList> = ({
       className="rounded-l-lg border shadow-md list-none max-h-48 overflow-y-auto pl-2 py-2 pr-2 max-w-sm"
     >
       {isInputPresent ? (
-        <SuggestionsListEntry
-          key={`current-input-text`}
-          text={currentInput}
-          onClick={() => console.log('Current selection clicked')}
-        />
+        <div className="rounded-md bg-hostinger-hover-grey">
+          <SuggestionsListEntry key={`current-input-text`} text={currentInput} onClick={onSuggestionChosen} />
+        </div>
       ) : null}
 
       {isApiClientCalled || areSuggestionsPresent ? (
