@@ -33,7 +33,7 @@ export const SuggestionsList: React.FC<ISuggestionsList> = ({
         />
       ) : null}
 
-      {isApiClientCalled ? (
+      {isApiClientCalled || areSuggestionsPresent ? (
         <p className="text-3xs font-medium py-2 px-4 text-slate-800 tracking-2widest uppercase">Suggestions</p>
       ) : null}
       {isApiClientCalled && !areSuggestionsPresent ? (
