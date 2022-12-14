@@ -1,8 +1,6 @@
-import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { WebsiteBuilder } from './WebsiteBuilder';
-
-// TODO: test different parameters of suggestionsLimit and autocompleteDelayTime (if we don't just go and make delay time a constant)
 
 describe('WebsiteBuilder tests', () => {
   const title = 'What type of website are you building?';
