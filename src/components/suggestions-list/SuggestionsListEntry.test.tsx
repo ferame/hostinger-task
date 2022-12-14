@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, within } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { SuggestionsListEntry } from './SuggestionsListEntry';
 
 describe('SuggestionsListEntry tests', () => {
@@ -13,8 +13,17 @@ describe('SuggestionsListEntry tests', () => {
   });
 
   it('should render list item correctly', () => {
-    const { getByText } = setupTest(testText);
-    expect(getByText(testText)).toBeInTheDocument();
+    const { getByRole } = setupTest(testText);
+    const listItem = getByRole('listitem');
+    expect(within(listItem).getByText(testText)).toBeInTheDocument();
+    expect(within(listItem).getByRole('button')).toBeInTheDocument();
+  });
+
+  it('should render list item with empty string', () => {
+    const { getByRole } = setupTest('');
+    const listItem = getByRole('listitem');
+    expect(listItem).toBeInTheDocument();
+    expect(within(listItem).getByRole('button')).toBeInTheDocument();
   });
 
   it('should handle the click correctly', () => {
@@ -25,6 +34,4 @@ describe('SuggestionsListEntry tests', () => {
     expect(mockOnClick).toBeCalledTimes(1);
     expect(mockOnClick).toHaveBeenCalledWith(testText);
   });
-
-  // Add test to check if it renders with longer string
 });

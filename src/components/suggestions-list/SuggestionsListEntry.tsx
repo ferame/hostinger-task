@@ -5,8 +5,10 @@ interface ISuggestionsListEntry {
 
 export const SuggestionsListEntry: React.FC<ISuggestionsListEntry> = ({ text, onClick }) => {
   return (
-    <li className="rounded-md hover:bg-hostinger-hover-grey py-2 px-4" onClick={() => onClick(text)}>
-      <p className="text-sm font-normal">{text}</p>
+    <li className="rounded-md hover:bg-hostinger-hover-grey focus-within:bg-hostinger-hover-grey">
+      <button className="w-full h-full outline-none py-2 px-4" onClick={() => onClick(text)}>
+        <p className="text-sm text-left font-normal overflow-clip">{text}</p>
+      </button>
     </li>
   );
 };
