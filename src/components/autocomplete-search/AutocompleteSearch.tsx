@@ -1,7 +1,7 @@
-import { useState, useCallback, Fragment, createContext } from 'react';
-import { debounce } from '../../utils/debounce';
-import { SuggestionsList } from '../../components/suggestions-list/SuggestionsList';
+import { Fragment, useCallback, useState } from 'react';
 import { suggestionsApiClient } from '../../api/suggestionsApiClient';
+import { SuggestionsList } from '../../components/suggestions-list/SuggestionsList';
+import { debounce } from '../../utils/debounce';
 import { AutocompleteButton } from '../autocomplete-button/AutocompleteButton';
 
 interface IAutocompleteSearch {

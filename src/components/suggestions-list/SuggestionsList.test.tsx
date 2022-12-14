@@ -1,5 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
-import { fireEvent, queryByRole, render, within } from '@testing-library/react';
+import { render, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 import { SuggestionsList } from './SuggestionsList';
 
 describe('SuggestionsList tests', () => {
@@ -21,9 +22,12 @@ describe('SuggestionsList tests', () => {
     vi.resetAllMocks();
   });
 
-  const setupTest = (currentInput: string, suggestions: Set<string>) =>
+  // TODO: tests both for the case when apiClient was called and was not called
+
+  const setupTest = (currentInput: string, suggestions: Set<string>, isApiClientCalled: boolean) =>
     render(
       <SuggestionsList
+        isApiClientCalled={isApiClientCalled}
         currentInput={currentInput}
         suggestions={suggestions}
         onSuggestionChosen={mockOnSuggestionChosen}
@@ -31,7 +35,7 @@ describe('SuggestionsList tests', () => {
     );
 
   it('should render list item correctly with empty input', () => {
-    const { getByRole, getAllByRole } = setupTest('', mockSuggestions);
+    const { getByRole, getAllByRole } = setupTest('', mockSuggestions, true);
     expect(getByRole('list')).toBeInTheDocument();
     const allListEntries = getAllByRole('listitem');
     const firstListEntry = within(allListEntries[0]);
@@ -39,7 +43,7 @@ describe('SuggestionsList tests', () => {
   });
 
   it('should render list item correctly with filled out input', () => {
-    const { getByRole, getAllByRole } = setupTest('mock input', mockSuggestions);
+    const { getByRole, getAllByRole } = setupTest('mock input', mockSuggestions, true);
     expect(getByRole('list')).toBeInTheDocument();
     const allListEntries = getAllByRole('listitem');
     const firstListEntry = within(allListEntries[0]);
@@ -47,41 +51,47 @@ describe('SuggestionsList tests', () => {
   });
 
   it('should show the suggestions list separator', () => {
-    const { getByText } = setupTest('mock input', mockSuggestions);
+    const { getByText } = setupTest('mock input', mockSuggestions, true);
     expect(getByText('Suggestions')).toBeInTheDocument();
   });
 
   it('should render list of suggestions correctly', () => {
-    const { getByText } = setupTest('mock input', mockSuggestions);
+    const { getByText } = setupTest('mock input', mockSuggestions, true);
     mockSuggestions.forEach((mockSuggestion) => {
       expect(getByText(mockSuggestion)).toBeInTheDocument();
     });
   });
 
   it('should handle the empty suggestions correctly with input', () => {
-    const { getByRole, getAllByRole, queryByText } = setupTest('mock input', new Set<string>());
+    const { getByRole, getAllByRole, queryByText, getByText } = setupTest('mock input', new Set<string>(), true);
 
     expect(getByRole('list')).toBeInTheDocument();
-    expect(queryByText('Suggestions')).toBeNull();
+    expect(getByText('Suggestions')).toBeInTheDocument();
 
     const allListEntries = getAllByRole('listitem');
     expect(allListEntries.length).toEqual(1);
     expect(within(allListEntries[0]).getByText('mock input')).toBeInTheDocument();
+
+    expect(getByText('No suggestions found')).toBeInTheDocument();
   });
 
-  it('should handle the empty suggestions correctly without input', () => {
-    const { getByRole, queryByText, queryByRole } = setupTest('', new Set<string>());
+  it('should handle the empty suggestions correctly without input after API was called', () => {
+    const { getByRole, getByText, queryByRole } = setupTest('', new Set<string>(), true);
     expect(getByRole('list')).toBeInTheDocument();
-    expect(queryByText('Suggestions')).toBeNull();
+    expect(getByText('Suggestions')).toBeInTheDocument();
+    expect(getByRole('list')).toBeInTheDocument();
+
     expect(queryByRole('listitem')).toBeNull();
+    expect(getByText('No suggestions found')).toBeInTheDocument();
   });
 
-  it('should handle the suggestion choice correctly', () => {
-    const { getByText } = setupTest('', mockSuggestions);
+  it('should handle the suggestion choice correctly', async () => {
+    const user = userEvent.setup();
+    const { getByText } = setupTest('', mockSuggestions, true);
     const selectedSuggestion = mockSuggestions.values().next().value;
     const suggestionListEntry = getByText(selectedSuggestion);
     expect(mockOnSuggestionChosen).toHaveBeenCalledTimes(0);
-    fireEvent.click(suggestionListEntry);
+    await user.click(suggestionListEntry);
     expect(mockOnSuggestionChosen).toHaveBeenCalledOnce;
     expect(mockOnSuggestionChosen).toHaveBeenCalledWith(selectedSuggestion);
   });

@@ -1,13 +1,9 @@
-import { describe, it, expect, vi } from 'vitest';
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
-import { render } from '@testing-library/react';
-import { AutocompleteSearch } from './AutocompleteSearch';
-import { sleep } from '../../utils/sleep';
-import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/dom';
+import { render, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 import { suggestionsApiClient } from '../../api/suggestionsApiClient';
-import { act } from 'react-dom/test-utils';
+import { AutocompleteSearch } from './AutocompleteSearch';
 
 describe('AutocompleteSearch tests', () => {
   let suggestionsPostRequestSpy = vi.spyOn(suggestionsApiClient, 'suggestionsPostRequest');
@@ -61,6 +57,7 @@ describe('AutocompleteSearch tests', () => {
     });
   });
 
+  // TODO: write tests both for initial state, when api was not called, and for the second state, when api was called already
   describe('Autocomplete with text input', () => {
     beforeEach(() => {
       suggestionsPostRequestSpy.mockReturnValue(Promise.resolve(mockServerResponse));
@@ -72,17 +69,23 @@ describe('AutocompleteSearch tests', () => {
 
     it('should show suggestion list after typing', async () => {
       const user = userEvent.setup();
-      const { getByText, getByRole, queryByTestId } = setupTest(10, 1000);
+      const { getByText, getByRole, queryByTestId, queryByRole, getAllByRole, queryByText } = setupTest(10, 1000);
 
       const inputBox = getByRole('textbox');
       expect(inputBox).toHaveValue('');
       expect(suggestionsPostRequestSpy).toBeCalledTimes(0);
+      expect(queryByRole('list')).toBeNull();
+
       await user.type(inputBox, 'Shop');
+
       expect(inputBox).toHaveValue('Shop');
+      expect(getByRole('list')).toBeDefined();
+      const allListEntries = getAllByRole('listitem');
+      expect(allListEntries.length).toEqual(1);
+      expect(within(allListEntries[0]).getByText('Shop')).toBeInTheDocument();
+      expect(queryByText('Suggestions')).toBeNull();
 
-      expect(queryByTestId('suggestions-list')).toBeNull();
-
-      await waitFor(() => expect(queryByTestId('suggestions-list')).toBeInTheDocument());
+      await waitFor(() => expect(getByText('Suggestions')).toBeInTheDocument());
       expect(suggestionsPostRequestSpy).toHaveBeenCalledOnce();
       expect(suggestionsPostRequestSpy).toBeCalledWith('Shop', 10);
 
@@ -103,8 +106,7 @@ describe('AutocompleteSearch tests', () => {
       await user.type(inputBox, 'Shop');
       expect(inputBox).toHaveValue('Shop');
 
-      expect(queryByTestId('suggestions-list')).toBeNull();
-      await waitFor(() => expect(queryByTestId('suggestions-list')).toBeInTheDocument());
+      await waitFor(() => expect(getByText('Suggestions')).toBeInTheDocument());
       expect(suggestionsPostRequestSpy).toHaveBeenCalledOnce();
       expect(suggestionsPostRequestSpy).toBeCalledWith('Shop', 10);
 
