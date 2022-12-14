@@ -7,7 +7,7 @@ interface IAutocompleteButton {
 
 export const AutocompleteButton: React.FC<IAutocompleteButton> = ({ isLoading, onClick }) => {
   return isLoading ? (
-    <button className="w-12 h-12 mr-1">
+    <button data-testid="autocomplete-search-button-loading" className="w-12 h-12 mr-1" onClick={onClick}>
       <div className="z-10 absolute rounded-full h-9 w-9 bg-hostinger-purple outline-none ml-1.5 mt-1.5">
         <img src={magnifyingGlass} alt="search" height={16} width={16} className="mx-auto pt-2.5" />
       </div>
