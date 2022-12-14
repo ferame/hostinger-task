@@ -13,14 +13,16 @@ describe('AutocompleteButton tests', () => {
   });
 
   it('loads button successfully in static state', () => {
-    const { getByTestId, queryByTestId } = setupTest(false);
+    const { getByTestId, queryByTestId, getByRole } = setupTest(false);
     expect(getByTestId('autocomplete-search-button')).toBeInTheDocument();
+    expect(getByRole('img')).toHaveProperty('alt', 'search');
     expect(queryByTestId('autocomplete-search-button-loading')).toBeNull();
   });
 
   it('loads button successfully in loading state', () => {
-    const { getByTestId, queryByTestId } = setupTest(true);
+    const { getByTestId, queryByTestId, getByRole } = setupTest(true);
     expect(getByTestId('autocomplete-search-button-loading')).toBeInTheDocument();
+    expect(getByRole('img')).toHaveProperty('alt', 'search');
     expect(queryByTestId('autocomplete-search-button')).toBeNull();
   });
 
