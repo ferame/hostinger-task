@@ -10,17 +10,17 @@ describe('WebsiteBuilder tests', () => {
 
   it('should render title', () => {
     const { getByText } = setupTest();
-    expect(getByText(title)).toBeInTheDocument();
+    expect(getByText(title)).toBeVisible();
   });
 
   it('should render the text under the title', () => {
     const { getByText } = setupTest();
-    expect(getByText(underTitleText)).toBeInTheDocument();
+    expect(getByText(underTitleText)).toBeVisible();
   });
 
   it('should render the AutocompleteSearch pill without suggestions on initial load', () => {
     const { getByTestId, queryByTestId } = setupTest();
-    expect(getByTestId('autocomplete-pill')).toBeInTheDocument();
+    expect(getByTestId('autocomplete-pill')).toBeVisible();
     expect(queryByTestId('suggestions-list')).toBeNull();
   });
 });

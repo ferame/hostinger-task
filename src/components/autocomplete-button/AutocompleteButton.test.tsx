@@ -12,16 +12,16 @@ describe('AutocompleteButton tests', () => {
     vi.resetAllMocks();
   });
 
-  it('loads button successfully in static state', () => {
+  it('loads button in static state', () => {
     const { getByTestId, queryByTestId, getByRole } = setupTest(false);
-    expect(getByTestId('autocomplete-search-button')).toBeInTheDocument();
+    expect(getByTestId('autocomplete-search-button')).toBeVisible();
     expect(getByRole('img')).toHaveProperty('alt', 'search');
     expect(queryByTestId('autocomplete-search-button-loading')).toBeNull();
   });
 
-  it('loads button successfully in loading state', () => {
+  it('loads button in loading state', () => {
     const { getByTestId, queryByTestId, getByRole } = setupTest(true);
-    expect(getByTestId('autocomplete-search-button-loading')).toBeInTheDocument();
+    expect(getByTestId('autocomplete-search-button-loading')).toBeVisible();
     expect(getByRole('img')).toHaveProperty('alt', 'search');
     expect(queryByTestId('autocomplete-search-button')).toBeNull();
   });

@@ -30,20 +30,20 @@ describe('AutocompleteSearch tests', () => {
       <AutocompleteSearch suggestionsLimit={suggestionsLimit} autocompleteDelayTimeMs={autocompleteDelayTimeMs} />,
     );
 
-  describe('Autocomplete loads correctly', () => {
+  describe('Autocomplete loads', () => {
     it('should render AutocompleteSearch pill', () => {
       const { getByTestId } = setupTest(10, 1000);
-      expect(getByTestId('autocomplete-pill')).toBeInTheDocument();
+      expect(getByTestId('autocomplete-pill')).toBeVisible();
     });
 
     it('should render input', () => {
       const { getByTestId } = setupTest(10, 1000);
-      expect(getByTestId('autocomplete-input-field')).toBeInTheDocument();
+      expect(getByTestId('autocomplete-input-field')).toBeVisible();
     });
 
     it('should render button', () => {
       const { getByTestId } = setupTest(10, 1000);
-      expect(getByTestId('autocomplete-search-button')).toBeInTheDocument();
+      expect(getByTestId('autocomplete-search-button')).toBeVisible();
     });
 
     it('should not have the suggestions list', () => {
@@ -73,15 +73,15 @@ describe('AutocompleteSearch tests', () => {
       expect(getByRole('list')).toBeDefined();
       const allListEntries = getAllByRole('listitem');
       expect(allListEntries.length).toEqual(1);
-      expect(within(allListEntries[0]).getByText('Shop')).toBeInTheDocument();
+      expect(within(allListEntries[0]).getByText('Shop')).toBeVisible();
       expect(queryByText('Suggestions')).toBeNull();
 
-      await waitFor(() => expect(getByText('Suggestions')).toBeInTheDocument());
+      await waitFor(() => expect(getByText('Suggestions')).toBeVisible());
       expect(suggestionsPostRequestSpy).toHaveBeenCalledOnce();
       expect(suggestionsPostRequestSpy).toBeCalledWith('Shop', 10);
 
       mockServerResponse.forEach((response) => {
-        expect(getByText(response)).toBeInTheDocument();
+        expect(getByText(response)).toBeVisible();
       });
     });
 
@@ -100,10 +100,10 @@ describe('AutocompleteSearch tests', () => {
       expect(getByRole('list')).toBeDefined();
       const allListEntries = getAllByRole('listitem');
       expect(allListEntries.length).toEqual(1);
-      expect(within(allListEntries[0]).getByText('Shop')).toBeInTheDocument();
+      expect(within(allListEntries[0]).getByText('Shop')).toBeVisible();
       expect(queryByText('Suggestions')).toBeNull();
 
-      await waitFor(() => expect(getByText('Suggestions')).toBeInTheDocument());
+      await waitFor(() => expect(getByText('Suggestions')).toBeVisible());
       expect(suggestionsPostRequestSpy).toHaveBeenCalledOnce();
       expect(suggestionsPostRequestSpy).toBeCalledWith('Shop', 5);
     });
@@ -123,29 +123,29 @@ describe('AutocompleteSearch tests', () => {
       expect(getByRole('list')).toBeDefined();
       const allListEntries = getAllByRole('listitem');
       expect(allListEntries.length).toEqual(1);
-      expect(within(allListEntries[0]).getByText('Shop')).toBeInTheDocument();
+      expect(within(allListEntries[0]).getByText('Shop')).toBeVisible();
       expect(queryByText('Suggestions')).toBeNull();
 
-      await waitFor(() => expect(getByText('Suggestions')).toBeInTheDocument());
+      await waitFor(() => expect(getByText('Suggestions')).toBeVisible());
       expect(suggestionsPostRequestSpy).toHaveBeenCalledOnce();
       expect(suggestionsPostRequestSpy).toBeCalledWith('Shop', 10);
 
       mockServerResponse.forEach((response) => {
-        expect(getByText(response)).toBeInTheDocument();
+        expect(getByText(response)).toBeVisible();
       });
       suggestionsPostRequestSpy.mockReturnValueOnce(Promise.resolve([...mockServerResponse, 'New test entry']));
 
       await user.type(inputBox, 's');
 
-      await waitFor(() => expect(getByText('New test entry')).toBeInTheDocument());
+      await waitFor(() => expect(getByText('New test entry')).toBeVisible());
       mockServerResponse.forEach((response) => {
-        expect(getByText(response)).toBeInTheDocument();
+        expect(getByText(response)).toBeVisible();
       });
       expect(suggestionsPostRequestSpy).toHaveBeenCalledTimes(2);
       expect(suggestionsPostRequestSpy).toHaveBeenLastCalledWith('Shops', 10);
     });
 
-    it('should handle the suggestion selection successfully', async () => {
+    it('should handle the suggestion selection', async () => {
       const user = userEvent.setup();
       const { getByText, getByRole, getByTestId, findByTestId } = setupTest(10, 1000);
 
@@ -156,7 +156,7 @@ describe('AutocompleteSearch tests', () => {
       expect(inputBox).toHaveValue('Shop');
 
       await waitFor(() => {
-        expect(getByText('Suggestions')).toBeInTheDocument();
+        expect(getByText('Suggestions')).toBeVisible();
       });
 
       expect(suggestionsPostRequestSpy).toHaveBeenCalledOnce();
@@ -168,7 +168,7 @@ describe('AutocompleteSearch tests', () => {
       expect(inputBox).toHaveValue(mockServerResponse[1]);
     });
 
-    it('should handle button click correctly', async () => {
+    it('should handle button click', async () => {
       const user = userEvent.setup();
       const { getByTestId, getByText } = setupTest(10, 1000);
 
@@ -178,7 +178,7 @@ describe('AutocompleteSearch tests', () => {
       await user.click(searchButton);
 
       await waitFor(() => {
-        expect(getByText('Suggestions')).toBeInTheDocument();
+        expect(getByText('Suggestions')).toBeVisible();
       });
       expect(suggestionsPostRequestSpy).toHaveBeenCalledWith('', 10);
     });
