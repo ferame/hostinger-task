@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { SuggestionsListEntry } from './SuggestionsListEntry';
 
 interface ISuggestionsList {
@@ -13,9 +14,13 @@ export const SuggestionsList: React.FC<ISuggestionsList> = ({
   suggestions,
   onSuggestionChosen,
 }) => {
-  const listItems = [...suggestions].map((suggestion) => (
-    <SuggestionsListEntry key={suggestion} text={suggestion} onClick={onSuggestionChosen} />
-  ));
+  const listItems = useMemo(
+    () =>
+      [...suggestions].map((suggestion) => (
+        <SuggestionsListEntry key={suggestion} text={suggestion} onClick={onSuggestionChosen} />
+      )),
+    [suggestions],
+  );
 
   const isInputPresent = currentInput.length > 0;
   const areSuggestionsPresent = listItems.length > 0;

@@ -47,7 +47,7 @@ export const AutocompleteSearch: React.FC<IAutocompleteSearch> = ({ suggestionsL
           type="text"
           placeholder="Type here to search"
           value={textInput}
-          onChange={(event) => updateValue(event?.target?.value)}
+          onChange={(event) => updateValue(event.target?.value ?? '')}
         />
         <AutocompleteButton isLoading={isLoading} onClick={() => debouncedGetSuggestions(textInput)} />
       </div>

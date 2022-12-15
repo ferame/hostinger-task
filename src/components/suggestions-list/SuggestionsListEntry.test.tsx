@@ -12,21 +12,21 @@ describe('SuggestionsListEntry tests', () => {
     vi.resetAllMocks();
   });
 
-  it('should render list item correctly', () => {
+  it('should render list item', () => {
     const { getByRole } = setupTest(testText);
     const listItem = getByRole('listitem');
-    expect(within(listItem).getByText(testText)).toBeInTheDocument();
-    expect(within(listItem).getByRole('button')).toBeInTheDocument();
+    expect(within(listItem).getByText(testText)).toBeVisible();
+    expect(within(listItem).getByRole('button')).toBeVisible();
   });
 
   it('should render list item with empty string', () => {
     const { getByRole } = setupTest('');
     const listItem = getByRole('listitem');
-    expect(listItem).toBeInTheDocument();
-    expect(within(listItem).getByRole('button')).toBeInTheDocument();
+    expect(listItem).toBeVisible();
+    expect(within(listItem).getByRole('button')).toBeVisible();
   });
 
-  it('should handle the click correctly', () => {
+  it('should handle the click', () => {
     const { getByText } = setupTest(testText);
     const listItem = getByText('test text');
     expect(mockOnClick).toBeCalledTimes(0);

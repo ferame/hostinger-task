@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import App from './App';
 
 describe('App loads', () => {
@@ -7,6 +7,6 @@ describe('App loads', () => {
 
   it('shows the WebsiteBuilder', () => {
     const { getByTestId } = setupTest();
-    expect(getByTestId('website-builder')).toBeInTheDocument();
+    expect(getByTestId('website-builder')).toBeVisible();
   });
 });
