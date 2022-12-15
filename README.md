@@ -1,14 +1,14 @@
 # Hostinger Homework Task
 
 ## Stack:
+React\
+Vite\
+Vitest\
+React Testing Library\
+Tailwind CSS\
+MSW (Mock Service Worker)\
 
-React
-Vite
-Vitest
-React Testing Library
-Tailwind CSS
-MSW (Mock Service Worker)
-
+## Commands:
 - To build the project:
 
 ```
